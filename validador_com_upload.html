@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Validador de tamanho de foto</title>
+</head>
+
+
+<body>
+       
+        <input type="file" value="arquivo" />
+
+</body>
+
+<script>
+
+    const input = document.querySelector('input[type="file"')
+    input.addEventListener('change', function (e){
+        console.log(input.width)
+        const reader = new FileReader()
+        reader.onload = function (e) {
+            var img = new Image;
+            img.onload = function() {
+              console.log("The width of the image is " + img.width + "px.");
+            };
+            img.src = reader.result;
+          };
+    },false)
+
+</script>
+
+</html>

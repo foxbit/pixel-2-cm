@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Validador de tamanho de foto</title>
+</head>
+<style>
+
+    body
+        {
+        background: lightgrey;
+        text-align: center;
+        margin: 50px;
+        }
+
+    div{
+        width: 350px;
+        height: 70px;
+        text-align: center;
+        border-radius: 10px;
+        padding-top: 15px;
+        margin: 10px;
+        font: normal 13pt arial;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+
+    }
+
+</style>
+
+<body>
+    <h1>Sistema de validação de imagens</h1>
+    <p>Quantidade de pixel horizontal</p>
+    <input type="number" id="largurapx">
+    <p>Quantidade de pixel vertical</p>
+    <input type="number" id="alturapx">
+    <br/><br/>
+    <input type="button" id="botaocalcular" value="Calcular" onclick="calcular()">
+
+    <!-- Divs onde sairão os resultados -->
+
+    <div id="resultadoIdeal" style="margin-top: 30px;"></div>
+    <div id="divFullScreen"></div>
+    <div id="divA5"></div>
+    <div id="divA4"></div>
+    <div id="divA3"></div>
+    <div id="divA2"></div>
+    <div id="divA1"></div>
+
+</body>
+<script>
+    
+
+    
+// Estilos dos status das divs
+
+    const cssCompativel = '#59CFFB';
+    const cssNaoCompativel = '#FF6B66';
+    const cssIdeal = '#F9FB17';
+
+//-------------------------------------------------------------------------------------------
+
+
+    function calcular() {
+
+        // Criar tabela de tamanhos dos arquivos
+        //                               #Formato       #PxHoriz    #PxVert      #CmHoriz   #CmVert  
+        const listaFormatosFullScreen = ['Fullscreen',  '1080',     '1920',      '9',       '16']
+        const listaFormatosA5 =         ['A5',          '1748',     '2480',      '14,8',    '21']
+        const listaFormatosA4 =         ['A4',          '2480',     '3508',      '21',      '29']
+        const listaFormatosA3 =         ['A3',          '3508',     '4960',      '29,7',    '42']
+        const listaFormatosA2 =         ['A2',          '4960',     '7016',      '42',      '60']
+        const listaFormatosA1 =         ['A1',          '7016',     '9933',      '60',      '84']
+
+       
+
+        // Definindo índice array maior e menor
+
+        const arrayIndiceMENOR_Px = 1;
+        const arrayIndiceMAIOR_Px = 2;
+    
+        const arrayIndiceMENOR_Cm = 3;
+        const arrayIndiceMAIOR_Cm = 4;
+
+
+    // Pegar os valores dos inputs e declarar variável ------------------------------------------
+
+        // Capturando dados do input width e declarando variável
+        var larguraPX = window.document.getElementById('largurapx')
+        const qtdPixelLargura = Number(larguraPX.value)
+
+        // Capturando dados do input heigh e declarando variável
+        var alturaPX = window.document.getElementById('alturapx')
+        const qtdPixelAltura = Number(alturaPX.value)
+
+        
+        // Descobrindo qual dos lados é o maior e o menor em pixel e definindo corretamente as variáveis
+
+        var ladoMaior = qtdPixelLargura
+        var ladoMenor = qtdPixelAltura
+
+        if (qtdPixelAltura >= qtdPixelLargura){
+            var ladoMaior = qtdPixelAltura;
+            var ladoMenor = qtdPixelLargura;
+        }
+
+    
+    //-------------------------------------------------------------------------------------------
+
+
+
+    // Declarando a div do resultado
+        let divResultadoIdeal = window.document.getElementById('resultadoIdeal');
+        let divResultadoFullScreen = window.document.getElementById('divFullScreen');
+        let divResultadoA5 = window.document.getElementById('divA5');
+        let divResultadoA4 = window.document.getElementById('divA4');
+        let divResultadoA3 = window.document.getElementById('divA3');
+        let divResultadoA2 = window.document.getElementById('divA2');
+        let divResultadoA1 = window.document.getElementById('divA1');
+        
+
+
+
+    
+    // Converter largura em PX para Polegadas e depois para Cm
+
+
+    const ladoMaiorCm = (ladoMaior / 300) * 2.56;
+    const ladoMenorCm = (ladoMenor / 300) * 2.56;
+
+    divResultadoIdeal.innerHTML = `O tamanho ideal da impressão dessa imagem é de 
+                                <strong>${ladoMaiorCm.toFixed(1)}x${ladoMenorCm.toFixed(1)}cm</strong>`;
+    divResultadoIdeal.style.background = cssIdeal;
+
+
+
+    
+    // Condicional FullScreen
+        if (ladoMenor >= listaFormatosFullScreen[arrayIndiceMENOR_Px] && ladoMaior >= listaFormatosFullScreen[arrayIndiceMAIOR_Px]) {
+
+            divResultadoFullScreen.innerHTML = `Compatível com <strong>HD FullScreen</strong> <i class="fa fa-check-circle"></i>
+                                                <br/>Formato: ${listaFormatosFullScreen[arrayIndiceMAIOR_Cm]}x${listaFormatosFullScreen[arrayIndiceMENOR_Cm]}cm`;
+            divResultadoFullScreen.style.background = cssCompativel;
+        } 
+        
+        else {
+            divResultadoFullScreen.innerHTML = `Não compatível com <strong>HD FullScreen</strong> <i class="fa fa-close"></i>
+                                                <br/>Formato: ${listaFormatosFullScreen[arrayIndiceMAIOR_Cm]}x${listaFormatosFullScreen[arrayIndiceMENOR_Cm]}cm`
+            divResultadoFullScreen.style.background = cssNaoCompativel;
+        }
+
+
+
+    // Condicional A5
+        if (ladoMenor >= listaFormatosA5[arrayIndiceMENOR_Px] && ladoMaior >= listaFormatosA5[arrayIndiceMAIOR_Px]) {
+
+            divResultadoA5.innerHTML = `Compatível com <strong>A5</strong> <i class="fa fa-check-circle"></i>
+                                                <br/>Formato: ${listaFormatosA5[arrayIndiceMAIOR_Cm]}x${listaFormatosA5[arrayIndiceMENOR_Cm]}cm`;
+            divResultadoA5.style.background = cssCompativel;
+    } 
+
+        else {
+            divResultadoA5.innerHTML = `Não compatível com <strong>A5</strong> <i class="fa fa-close"></i>
+                                                <br/>Formato: ${listaFormatosA5[arrayIndiceMAIOR_Cm]}x${listaFormatosA5[arrayIndiceMENOR_Cm]}cm`
+            divResultadoA5.style.background = cssNaoCompativel;
+    }
+
+
+
+    // Condicional A4
+        if (ladoMenor >= listaFormatosA4[arrayIndiceMENOR_Px] && ladoMaior >= listaFormatosA4[arrayIndiceMAIOR_Px]) {
+
+            divResultadoA4.innerHTML = `Compatível com <strong>A4</strong> <i class="fa fa-check-circle"></i>
+                                        <br/>Formato: ${listaFormatosA4[arrayIndiceMAIOR_Cm]}x${listaFormatosA4[arrayIndiceMENOR_Cm]}cm`;
+            divResultadoA4.style.background = cssCompativel;
+        } 
+        
+        else {
+            divResultadoA4.innerHTML = `Não compatível com <strong>A4</strong> <i class="fa fa-close"></i>
+                                        <br/>Formato: ${listaFormatosA4[arrayIndiceMAIOR_Cm]}x${listaFormatosA4[arrayIndiceMENOR_Cm]}cm`
+            divResultadoA4.style.background = cssNaoCompativel;
+        }
+
+
+
+    // Condicional A3
+        if (ladoMenor >= listaFormatosA3[arrayIndiceMENOR_Px] && ladoMaior >= listaFormatosA3[arrayIndiceMAIOR_Px]) {
+
+            divResultadoA3.innerHTML = `Compatível com <strong>A3</strong> <i class="fa fa-check-circle"></i>
+                                        <br/>Formato: ${listaFormatosA3[arrayIndiceMAIOR_Cm]}x${listaFormatosA3[arrayIndiceMENOR_Cm]}cm`;
+            divResultadoA3.style.background = cssCompativel;
+        } 
+        
+        else {
+            divResultadoA3.innerHTML = `Não compatível com <strong>A3</strong> <i class="fa fa-close"></i>
+                                                 <br/>Formato: ${listaFormatosA3[arrayIndiceMAIOR_Cm]}x${listaFormatosA3[arrayIndiceMENOR_Cm]}cm`
+            divResultadoA3.style.background = cssNaoCompativel;
+        }
+    
+
+
+    // Condicional A2
+        if (ladoMenor >= listaFormatosA2[arrayIndiceMENOR_Px] && ladoMaior >= listaFormatosA2[arrayIndiceMAIOR_Px]) {
+
+            divResultadoA2.innerHTML = `Compatível com <strong>A2</strong> <i class="fa fa-check-circle"></i>
+                                                <br/>Formato: ${listaFormatosA2[arrayIndiceMAIOR_Cm]}x${listaFormatosA2[arrayIndiceMENOR_Cm]}cm`;
+            divResultadoA2.style.background = cssCompativel;
+        } 
+        
+        else {
+            divResultadoA2.innerHTML = `Não compatível com <strong>A2</strong> <i class="fa fa-close"></i>
+                                                <br/>Formato: ${listaFormatosA2[arrayIndiceMAIOR_Cm]}x${listaFormatosA2[arrayIndiceMENOR_Cm]}cm`
+            divResultadoA2.style.background = cssNaoCompativel;
+        } 
+
+    // Condicional A1
+
+        if (ladoMenor >= listaFormatosA1[arrayIndiceMENOR_Px] && ladoMaior >= listaFormatosA1[arrayIndiceMAIOR_Px]) {
+
+            divResultadoA1.innerHTML = `Compatível com <strong>A1</strong> <i class="fa fa-check-circle"></i>
+                                        <br/>Formato: ${listaFormatosA1[arrayIndiceMAIOR_Cm]}x${listaFormatosA1[arrayIndiceMENOR_Cm]}cm`;
+            divResultadoA1.style.background = cssCompativel;
+        } 
+        
+        else {
+            divResultadoA1.innerHTML = `Não compatível com <strong>A1</strong> <i class="fa fa-close"></i>
+                                                <br/>Formato: ${listaFormatosA1[arrayIndiceMAIOR_Cm]}x${listaFormatosA1[arrayIndiceMENOR_Cm]}cm`
+            divResultadoA1.style.background = cssNaoCompativel;
+        }
+    
+
+    }
+</script>
+
+</html>
